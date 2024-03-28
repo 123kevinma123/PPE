@@ -1,14 +1,41 @@
+
+
+
 const express = require("express");
 const cors = require('cors');
 const axios = require('axios');
 const app = express();
 const puppeteer = require('puppeteer');
 app.use(cors());
+const pokemon = require("pokemontcgsdk");
 
+pokemon.configure({apiKey: 'edf2d5dc-5147-4c68-972b-e69abdbd988b'})
 
 app.get("/", (req, res) => {
     res.send("hello world");
 });
+
+app.get("/api", (req, res) => {
+    pokemon.card.find('base1-4')
+    .then(card => {
+        console.log(card.name) // "Charizard"
+    })
+    pokemon.card.where({q: "name:charizard"})
+    .then(result => {
+        console.log(result.data.length)
+    })
+    pokemon.card.all({q: 'name:"charizard" set.name:"base"', orderBy: "-set.releaseDate"})
+    .then(result => {
+        const cardNames = result.map(card => card.id)
+        console.log(result.length)
+    })
+    pokemon.set.all({q: 'name:"base"', orderBy: "-set.releaseDate"})
+    .then((result) => {
+        const cardNames = result.map(card => card.releaseDate)
+        console.log(result.length)
+        res.json(cardNames)
+    })
+})
 
 app.get("/watch-count-search", async (req, res) => {
     try {

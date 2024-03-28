@@ -13,6 +13,7 @@
     "axios": "^1.6.8",
     "cors": "^2.8.5",
     "express": "^4.19.2",
+    "pokemontcgsdk": "^2.0.0",
     "puppeteer": "^22.6.1"
   }
 }
