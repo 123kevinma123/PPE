@@ -8,8 +8,10 @@ const app = express();
 const puppeteer = require('puppeteer');
 app.use(cors());
 const pokemon = require("pokemontcgsdk");
+require('dotenv').config()
+const apikey = process.env.APIKEY
 
-pokemon.configure({apiKey: 'edf2d5dc-5147-4c68-972b-e69abdbd988b'})
+pokemon.configure({apikey})
 
 app.get("/", (req, res) => {
     res.send("hello world");
