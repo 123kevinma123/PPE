@@ -20,22 +20,23 @@ app.get("/", (req, res) => {
 app.get("/api", (req, res) => {
     pokemon.card.find('base1-4')
     .then(card => {
-        console.log(card.name) // "Charizard"
+        //console.log(card.name) // "Charizard"
     })
     pokemon.card.where({q: "name:charizard"})
     .then(result => {
-        console.log(result.data.length)
+        //console.log(result.data.length)
     })
-    pokemon.card.all({q: 'name:"charizard" set.name:"base"', orderBy: "-set.releaseDate"})
+    pokemon.card.all({q: 'set.name:"vivid voltage"' })
     .then(result => {
-        const cardNames = result.map(card => card.id)
-        console.log(result.length)
-    })
-    pokemon.set.all({q: 'name:"base"', orderBy: "-set.releaseDate"})
-    .then((result) => {
-        const cardNames = result.map(card => card.releaseDate)
+        const cardNames = result.map(card => card.name)
         console.log(result.length)
         res.json(cardNames)
+    })
+    pokemon.set.all({q: 'name:"vivid voltage"', orderBy: "-set.releaseDate"})
+    .then((result) => {
+        const cardNames = result.map(card => card.name)
+        //console.log(result.length)
+        //res.json(cardNames)
     })
 })
 
