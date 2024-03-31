@@ -1,9 +1,8 @@
 .cotd_component {
-    height: calc(100vh - 150px - 200px);
+    height: fit-content;
     width: 85vw;
-    /*border: 2px solid red;*/
+    border: 2px solid red;
     margin: 0 auto;
-    overflow: hidden;
 }
 .cotd_title {
     border: 2px solid blue;
