@@ -7,17 +7,31 @@ function Search() {
 
     const handleInputChange = (event) => {
         setSearchResult(event.target.value);
+        
     };
-    const handelSubmit = (event) => {
-        event.preventDefault();
-
-        setSearchResult("");
+    function handleSubmit(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            sendToBackend(searchResult);
+            setSearchResult("");
+        }
     }
-
+    function sendToBackend(result) {
+        fetch("http://localhost:1234/search", {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({
+                result
+            })
+        });
+    }
     return (
         <div className = "search_component">
             <div className = "search_bar">
-                <input className = "search_input" type = "text" value = {searchResult} onChange = {handleInputChange} placeholder = "Search Pokemon" />  
+                <input className = "search_input" type = "text" value = {searchResult} onChange = {handleInputChange}
+                onKeyDown = {handleSubmit} placeholder = "Search Pokemon" />  
             </div>
         </div>
     )

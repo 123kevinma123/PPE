@@ -13,10 +13,16 @@ const apikey = process.env.APIKEY
 
 pokemon.configure({apikey})
 
+app.use(express.json());
+
 app.get("/", (req, res) => {
     res.send("hello world");
 });
-
+app.post("/search", (req, res) => {
+    const data = req.body;
+    console.log(data);
+    res.send('Data received successfully');
+});
 app.get("/api", (req, res) => {
     pokemon.card.find('base1-4')
     .then(card => {
