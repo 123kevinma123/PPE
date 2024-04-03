@@ -18,11 +18,42 @@ app.use(express.json());
 app.get("/", (req, res) => {
     res.send("hello world");
 });
-app.post("/search", (req, res) => {
-    const data = req.body;
-    console.log(data);
-    res.send('Data received successfully');
+
+app.post("/search", async (req, res) => {
+    try {
+        const dataRec = JSON.stringify(req.body)
+        const parseData = dataRec.replace(/ /g, "+");
+        const parseData11 = parseData.substring(11);
+        const parseData2 = parseData11.substring(0, parseData11.length - 2);
+        console.log(parseData2); 
+        const browser = await puppeteer.launch();
+
+        const page = await browser.newPage();
+        console.log(`https://www.pokellector.com/search?criteria=${parseData2}`);
+        await page.goto(`https://www.pokellector.com/search?criteria=${parseData2}`,{ waitUntil: 'domcontentloaded' });
+
+        await page.waitForSelector('.cardresult');
+        
+        const results = await page.evaluate(() => {
+            const items = document.querySelectorAll('.cardresult');
+            const data = [];
+            items.forEach(item => {
+                const title = item.querySelector(".detail .name a").textContent.trim();
+                const set = item.querySelector(".detail .set a").textContent.trim();
+                data.push({ title, set});
+            });
+            return data;
+        });
+        await browser.close();
+        res.json(results);
+        console.log(results);
+       
+    } catch (error) {
+        console.error('Error fetching pokellector data:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
+
 app.get("/api", (req, res) => {
     pokemon.card.find('base1-4')
     .then(card => {
