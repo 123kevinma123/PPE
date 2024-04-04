@@ -25,11 +25,9 @@ app.post("/search", async (req, res) => {
         const parseData = dataRec.replace(/ /g, "+");
         const parseData11 = parseData.substring(11);
         const parseData2 = parseData11.substring(0, parseData11.length - 2);
-        console.log(parseData2); 
         const browser = await puppeteer.launch();
 
         const page = await browser.newPage();
-        console.log(`https://www.pokellector.com/search?criteria=${parseData2}`);
         await page.goto(`https://www.pokellector.com/search?criteria=${parseData2}`,{ waitUntil: 'domcontentloaded' });
 
         await page.waitForSelector('.cardresult');
@@ -39,44 +37,55 @@ app.post("/search", async (req, res) => {
             const data = [];
             items.forEach(item => {
                 const title = item.querySelector(".detail .name a").textContent.trim();
-                const set = item.querySelector(".detail .set a").textContent.trim();
-                data.push({ title, set});
+                const setNumber = item.querySelector(".detail .set a").textContent.trim();
+                let parts = setNumber.split("#");
+                parts[0] = parts[0].substring(0, parts[0].length - 1);
+                data.push({ title, set: parts[0], number: parts[1]});
             });
             return data;
         });
         await browser.close();
-        res.json(results);
-        console.log(results);
+        
+        //access API
+        const apiUrl = "http://localhost:1234/api";
+        for (let i = 0; i < results.length; i++) {
+            let index = results[i].title.indexOf("(");
+            if (index == -1) {
+                index = results[i].title.length + 1;
+            }
+            const nameOnly = results[i].title.substring(0, index);
+            
+            const queryParams = new URLSearchParams({
+                name: nameOnly,
+                set: results[i].set,
+                number: results[i].number
+            });
+            const dynamicUrl = `${apiUrl}?${queryParams}`;
+            fetch(dynamicUrl)
+            .then(response => response.json())
+            .then(apiData => {
+            // Process the API data as needed
+            console.log('API data for', nameOnly, results[i].set, results[i].number, ':', apiData);
+        })
+        }
        
     } catch (error) {
         console.error('Error fetching pokellector data:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
 app.get("/api", (req, res) => {
-    pokemon.card.find('base1-4')
-    .then(card => {
-        //console.log(card.name) // "Charizard"
-    })
-    pokemon.card.where({q: "name:charizard"})
+    const name = req.query.name;
+    const set = '"' + req.query.set + '"';
+    const number = req.query.number;
+    //console.log(name)
+    //console.log(set)
+    //console.log(number)
+    pokemon.card.all({q: `name:${name} set.name:${set} number:${number}` })
     .then(result => {
-        //console.log(result.data.length)
-    })
-    pokemon.card.all({q: 'set.name:"vivid voltage"' })
-    .then(result => {
-        const cardNames = result.map(card => card.name)
-        console.log(result.length)
-        res.json(cardNames)
-    })
-    pokemon.set.all({q: 'name:"vivid voltage"', orderBy: "-set.releaseDate"})
-    .then((result) => {
-        const cardNames = result.map(card => card.name)
-        //console.log(result.length)
-        //res.json(cardNames)
+        res.json(result[0].images.large);
     })
 })
-
 app.get("/watch-count-search", async (req, res) => {
     try {
         const browser = await puppeteer.launch();
