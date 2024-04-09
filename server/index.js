@@ -30,7 +30,7 @@ app.post("/search", async (req, res) => {
         const page = await browser.newPage();
         await page.goto(`https://www.pokellector.com/search?criteria=${parseData2}`,{ waitUntil: 'domcontentloaded' });
 
-        await page.waitForSelector('.cardresult');
+        await page.waitForSelector('.cardresult', { timeout: 3000 });
         
         const results = await page.evaluate(() => {
             const items = document.querySelectorAll('.cardresult');
@@ -47,6 +47,7 @@ app.post("/search", async (req, res) => {
         await browser.close();
         
         //access API
+        const fetchPromises = [];
         const apiUrl = "http://localhost:1234/api";
         for (let i = 0; i < results.length; i++) {
             let index = results[i].title.indexOf("(");
@@ -62,16 +63,30 @@ app.post("/search", async (req, res) => {
             });
             const dynamicUrl = `${apiUrl}?${queryParams}`;
             fetch(dynamicUrl)
-            .then(response => response.json())
-            .then(apiData => {
-            // Process the API data as needed
-            console.log('API data for', nameOnly, results[i].set, results[i].number, ':', apiData);
-        })
+            fetchPromises.push(
+                fetch(dynamicUrl)
+                .then(response => response.json())
+                .then(apiData => {
+                    // Return the processed data
+                    return {
+                        name: nameOnly,
+                        set: results[i].set,
+                        number: results[i].number,
+                        image: apiData
+                    };
+                })
+            );
         }
+        Promise.all(fetchPromises)
+            .then(results => {
+            // Send the combined JSON response
+            res.json(results);
+            console.log('Combined API data:', results);
+        })
        
     } catch (error) {
         console.error('Error fetching pokellector data:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.json("No results Found!");
     }
 });
 app.get("/api", (req, res) => {
@@ -79,11 +94,16 @@ app.get("/api", (req, res) => {
     const set = '"' + req.query.set + '"';
     const number = req.query.number;
     //console.log(name)
-    //console.log(set)
-    //console.log(number)
+    console.log(set)
+    console.log(number)
     pokemon.card.all({q: `name:${name} set.name:${set} number:${number}` })
     .then(result => {
-        res.json(result[0].images.large);
+        if (result && result.length > 0) {
+            res.json(result[0].images.large);
+        } else {
+            //case if there are no results from API
+            res.json("");
+        }
     })
 })
 app.get("/watch-count-search", async (req, res) => {

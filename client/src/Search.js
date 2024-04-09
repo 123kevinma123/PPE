@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import './Main.css';
 import "./Search.css"
 
-function Search() {
+function Search({setReturnResults}) {
     const [searchResult, setSearchResult] = useState("");
 
     const handleInputChange = (event) => {
@@ -25,6 +25,13 @@ function Search() {
             body: JSON.stringify({
                 result
             })
+        })
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            console.log("Data received from server:", data);
+            setReturnResults(data);
         });
     }
     return (

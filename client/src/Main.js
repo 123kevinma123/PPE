@@ -1,9 +1,11 @@
 import './Main.css';
+import { useEffect, useState } from 'react';
 import CardOfTheDay from "./CardOfTheDay"
 import CardSearch from "./CardSearch"
 import Results from "./Results"
 import Search from "./Search"
 function Main() {
+    const [returnResults, setReturnResults] = useState([]);
     return (
         <div className = "wrapper">
             <div className = "nav_bar">
@@ -11,10 +13,12 @@ function Main() {
                     Graded Pokemon Price Estimator
                 </div>
             </div>
-            <Search />
+            <Search setReturnResults = {setReturnResults}/>
             { /* <CardOfTheDay /> */}
             { /* <CardSearch /> */}
-            <Results />
+            {returnResults && returnResults.length > 0 && (
+                <Results returnResults={returnResults} />
+            )}
         </div>
     )
 }
