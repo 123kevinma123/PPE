@@ -33,9 +33,9 @@ app.post("/search", async (req, res) => {
         await page.waitForSelector('.cardresult', { timeout: 3000 });
         
         const results = await page.evaluate(() => {
-            const items = document.querySelectorAll('.cardresult');
+            const items = Array.from(document.querySelectorAll('.cardresult'));
             const data = [];
-            items.forEach(item => {
+            items.slice(0, 20).forEach(item => {
                 const title = item.querySelector(".detail .name a").textContent.trim();
                 const setNumber = item.querySelector(".detail .set a").textContent.trim();
                 let parts = setNumber.split("#");
