@@ -9,11 +9,10 @@
     "start": "concurrently \"npm run build.css\" \"npm run server\" \"npm run client\"",
     "server": "cd server && nodemon index.js",
     "client": "cd client && npm start",
-    "build.css": "tailwindcss -i ./src/tailwind.css -o ./src/styles.css"
+    "build.css": "tailwindcss -i ./client/src/tailwind.css -o ./client/src/styles.css --watch"
   },
   "devDependencies": {
-    "autoprefixer": "^9.8.8",
-    "postcss": "^7.0.39",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17"
+    "postcss": "8.1",
+    "tailwindcss": "^3.4.4"
   }
 }
