@@ -54,7 +54,8 @@ app.post("/search", async (req, res) => {
             if (index == -1) {
                 index = results[i].title.length + 1;
             }
-            const nameOnly = results[i].title.substring(0, index);
+            const nameOnly = results[i].title.substring(0, index).trim();
+            
             
             const queryParams = new URLSearchParams({
                 name: nameOnly,
@@ -81,7 +82,7 @@ app.post("/search", async (req, res) => {
             .then(results => {
             // Send the combined JSON response
             res.json(results);
-            console.log('Combined API data:', results);
+            //console.log('Combined API data:', results);
         })
        
     } catch (error) {
@@ -89,15 +90,35 @@ app.post("/search", async (req, res) => {
         res.json("No results Found!");
     }
 });
+
+//call pokemon api
 app.get("/api", (req, res) => {
-    const name = req.query.name;
-    const set = '"' + req.query.set + '"';
+    
+    //trim search queries
+    let nameTemp = req.query.name.trim();
+    const name = '"' + nameTemp + '"';
+    let setTemp = req.query.set;
+    setTemp = setTemp.substring(setTemp.indexOf('-') + 1);
+    setTemp = setTemp.replace(/ -/g, "").trim();
+    const set = '"' + setTemp + '"';
     const number = req.query.number;
-    //console.log(name)
-    console.log(set)
-    console.log(number)
-    pokemon.card.all({q: `name:${name} set.name:${set} number:${number}` })
-    .then(result => {
+
+    //pokemon.card.all({q: `name:"Charizard" set.name:"Origin Trainer Gallery" number:TG03` })
+
+    //edge case where Promos is present, cannot search by set
+    let regex = /^[^0-9]/;
+    let promise;
+    if (set.toLowerCase().includes("promos") || set.toLowerCase().includes("promo")) {
+        promise = pokemon.card.all({q: `name:${name} number:${number}` })
+    } else {
+        //edge case where TG03, missing the 0
+        if (!regex.test(number)) {
+            promise = pokemon.card.all({q: `name:${name} set.name:${set} number:${number}` })
+        } else {
+            promise = pokemon.card.all({q: `name:${name} set.name:${set}` })
+        }
+    }
+    promise.then(result => {
         if (result && result.length > 0) {
             res.json(result[0].images.large);
         } else {
