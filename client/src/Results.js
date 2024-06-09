@@ -19,11 +19,9 @@ function Results({ returnResults }) {
                     />
                 </div>
                 <div className = "results_stats">
-                    {item.name}
-                    <br />
-                    {item.set}
-                    <br />
-                    {item.number}
+                    <div className = "text-black text-2xl my-2">{item.name}</div>
+                    <div className = "text-black text-1xl">{item.set}</div>
+                    <div className = "text-black text-1xl">{item.number}</div>
                 </div>
             </div>
         ));

@@ -66,8 +66,8 @@
     height: auto;
     /*border: 2px solid green;*/
     box-sizing: border-box;
-    text-align: center;
-   
+    /*background-color: lightgrey;*/
+    border-radius: 10px;
 }
 .results_image {
     width: auto;
