@@ -55,6 +55,7 @@ app.post("/search", async (req, res) => {
                 index = results[i].title.length + 1;
             }
             const nameOnly = results[i].title.substring(0, index).trim();
+            const rarity = results[i].title.substring(index, results[i].length). trim();
             
             
             const queryParams = new URLSearchParams({
@@ -71,6 +72,7 @@ app.post("/search", async (req, res) => {
                     // Return the processed data
                     return {
                         name: nameOnly,
+                        rarity: rarity,
                         set: results[i].set,
                         number: results[i].number,
                         image: apiData

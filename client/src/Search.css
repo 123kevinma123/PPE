@@ -1,7 +1,6 @@
 .search_component {
     display: flex;
     height: 150px;
-    width: 85vw;
     margin: 0 auto;
     background-color: #313131;
     /*border: 2px solid red;*/
@@ -12,7 +11,7 @@
 .search_bar {
     display: flex;
     height: 50px;
-    width: 20vw;
+    width: fit-content;
     background-color: white;
     align-items: center;
     border-radius: 10px;
@@ -22,13 +21,15 @@
 .search_input {
     font-size: 35px ;
     margin-left: 10px;
-    font-family: "VT323", monospace;
-    font-weight: 400;
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 100;
     font-style: normal;
     outline: none;
     border: none;
     letter-spacing: 0.00001px;
     width: 100%;
+    background-color: transparent;
 }
 .search_input::placeholder {
     color: #838383;

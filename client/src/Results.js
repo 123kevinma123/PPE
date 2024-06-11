@@ -9,7 +9,7 @@ function Results({ returnResults }) {
 
     try {
         content = returnResults.map((item, index) => (
-            <div className = "results_box" key={index}>
+            <div className = "results_box" key = {index}>
                 <div className = "results_art">
                     <img
                         src = {item.image}
@@ -19,9 +19,10 @@ function Results({ returnResults }) {
                     />
                 </div>
                 <div className = "results_stats">
-                    <div className = "text-black text-2xl my-2">{item.name}</div>
-                    <div className = "text-black text-1xl">{item.set}</div>
-                    <div className = "text-black text-1xl">{item.number}</div>
+                    <div className = "text-black text-xl mt-4 tracking-wider text-center font-bold">{item.name}</div>
+                    <div className = "text-gray-500 text-base tracking-wider text-center">{item.rarity}</div>
+                    <div className = "text-gray-500 text-base tracking-wider text-center">{item.set}</div>
+                    <div className = "text-gray-500 text-base tracking-wider text-center">{"#" + item.number}</div>
                 </div>
             </div>
         ));

@@ -1,19 +1,30 @@
+@font-face {
+    font-family: 'PokemonSolid';
+    src: url('C:/Users/123ke/OneDrive/Documents/Projects/react-app/client/src/Pokemon Solid.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 .wrapper {
-    background-color: white;
+    background-color: #f9f9f9;
     margin: auto;
-
 }
 .nav_bar {
     display: flex;
-    height: 200px;
-    background-color: white;
+    height: 40vh;
+    background-color: red;
     justify-content: center;
     align-items: center;
     /*border: 2px solid green;*/
 }
-.title {    
-    font-size: 70px;
-    /*border: 2px solid red;*/
-    color: black;
-    text-align: center;
+.title {
+    height: fit-content;
+    border: 2px solid green;
+    /*text-align: center;
+    font-family: 'PokemonSolid', sans-serif;
+    font-size: 4rem;
+    font-weight: bold;
+    color: #f7ce45;
+
+    -webkit-text-stroke: 2px #3a5fa4;*/
+    -webkit-background-clip: text;
 }

@@ -38,7 +38,7 @@ function Search({setReturnResults}) {
         <div className = "search_component">
             <div className = "search_bar">
                 <input className = "search_input" type = "text" value = {searchResult} onChange = {handleInputChange}
-                onKeyDown = {handleSubmit} placeholder = "Search Pokemon" />  
+                onKeyDown = {handleSubmit} placeholder = "Search Pokemon"/>  
             </div>
         </div>
     )
