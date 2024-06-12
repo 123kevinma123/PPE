@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Main.css';
 import "./Search.css"
 
 function Search({setReturnResults}) {
     const [searchResult, setSearchResult] = useState("");
+    const navigate = useNavigate();
 
     const handleInputChange = (event) => {
         setSearchResult(event.target.value);
@@ -11,6 +13,7 @@ function Search({setReturnResults}) {
     };
     function handleSubmit(event) {
         if (event.key === "Enter") {
+            //navigate(`/search?query=${encodeURIComponent(searchResult)}`);
             event.preventDefault();
             sendToBackend(searchResult);
             setSearchResult("");

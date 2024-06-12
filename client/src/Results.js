@@ -2,14 +2,22 @@ import './Results.css';
 import CardOfTheDay from "./CardOfTheDay"
 import CardSearch from "./CardSearch"
 import sadpikachu from "C:/Users/123ke/OneDrive/Documents/Projects/react-app/client/src/sadpikachu.jpg"
-function Results({ returnResults }) {
+import { useNavigate } from 'react-router-dom';
+function Results({ returnResults, setReturnClicked}) {
+    const navigate = useNavigate();
     const placeholderImage = "https://fakeimg.pl/734x1024?text=No+Image";
     let content;
     let noResults;
+    const handleItemClick = (item) => {
+        setReturnClicked([item.name, item.rarity, item.set, item.number]);
+        navigate(`/item/${item.name + item.rarity + item.set + item.number}`);
+      };
 
     try {
         content = returnResults.map((item, index) => (
-            <div className = "results_box" key = {index}>
+            <div
+            key = {index} className = "results_box" 
+            onClick = {() => handleItemClick(item)}>
                 <div className = "results_art">
                     <img
                         src = {item.image}

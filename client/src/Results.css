@@ -62,6 +62,7 @@
 .results_box:hover {
     /*border: 2px solid green;*/
     box-shadow: 0px 10px 20px 0px #00000033; 
+    cursor: pointer;
 }
 .results_art {
     margin: 20px;

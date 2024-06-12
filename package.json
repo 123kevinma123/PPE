@@ -3,7 +3,8 @@
     "@craco/craco": "^7.1.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "puppeteer": "^22.6.1"
+    "puppeteer": "^22.6.1",
+    "react-router-dom": "^6.23.1"
   },
   "scripts": {
     "start": "concurrently \"npm run build.css\" \"npm run server\" \"npm run client\"",

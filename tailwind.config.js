@@ -7,6 +7,7 @@ module.exports = {
     extend: {
       scale: {
         '60': '0.60',
+        '20': '0.20',
       }
     },
   },
