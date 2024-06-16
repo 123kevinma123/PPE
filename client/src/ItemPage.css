@@ -1,0 +1,24 @@
+.nav_bar_ItemPage {
+    display: flex;
+    height: 20vh;
+    background-color: red;
+    justify-content: center;
+    align-items: center;
+    /*border: 2px solid green;*/
+}
+.psa_grade {
+    display: flex;
+    height: 150px;
+    margin: 0 auto;
+    background-color: #313131;
+    /*border: 2px solid red;*/
+    justify-self: center;
+    justify-content: center;
+    align-items: center;
+}
+.psa_10 {
+    color: red;
+}
+.psa_9 {
+    color: red;
+}
