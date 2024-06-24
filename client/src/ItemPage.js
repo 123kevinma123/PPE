@@ -16,6 +16,11 @@ function ItemPage({ setReturnClicked, returnClicked}) {
     console.log(returnClicked[2]);
     console.log(returnClicked[3]);
     //if returnClicked == undefined --> repopulate w/ id lol
+
+    const [PSAGrade, setPSAGrade] = useState(0);
+    const PSAClick = (grade) => {
+        setPSAGrade(grade)
+    }
     return (
         <div className = "wrapper">
             <div className = "nav_bar_ItemPage">
@@ -24,12 +29,12 @@ function ItemPage({ setReturnClicked, returnClicked}) {
                 </a>
             </div>
             <div className = "psa_grade">
-                <div className = "psa_10">
+                <button className = "psa_10" onClick = {() => PSAClick(10)}>
                     PSA 10
-                </div>
-                <div className = "psa_9">
+                </button>
+                <button className = "psa_9" onClick = {() => PSAClick(9)}>
                     PSA 9
-                </div>
+                </button>
             </div>
         </div>
     );

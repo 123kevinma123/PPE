@@ -16,9 +16,13 @@
     justify-content: center;
     align-items: center;
 }
-.psa_10 {
-    color: red;
-}
-.psa_9 {
-    color: red;
+.psa_9, .psa_10 {
+    background-color: #f9f9f9;
+    color: #313131;
+    /*border: 2px solid green;*/
+    margin-inline: 10px;
+    padding: 10px;
+    min-width: 100px;
+    text-align: center;
+    border-radius: 10px;
 }
