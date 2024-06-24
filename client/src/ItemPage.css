@@ -1,3 +1,8 @@
+.itemPage_wrapper {
+    background-color: #f9f9f9;
+    margin: auto;
+    height: 100vh;
+}
 .nav_bar_ItemPage {
     display: flex;
     height: 20vh;
@@ -6,7 +11,7 @@
     align-items: center;
     /*border: 2px solid green;*/
 }
-.psa_grade {
+.psa_title {
     display: flex;
     height: 150px;
     margin: 0 auto;
@@ -15,14 +20,44 @@
     justify-self: center;
     justify-content: center;
     align-items: center;
+    color: #f9f9f9;
+    font-size: 50px;
+    text-align: center;
 }
+.psa_select {
+    display: flex;
+    height: fit-content;
+    margin: 0 auto;
+    /*border: 2px solid red;*/
+    justify-self: center;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
 .psa_9, .psa_10 {
-    background-color: #f9f9f9;
+    background-color: white;
     color: #313131;
     /*border: 2px solid green;*/
     margin-inline: 10px;
+    margin-block: 10px;
     padding: 10px;
-    min-width: 100px;
+    min-width: 200px;
     text-align: center;
     border-radius: 10px;
+    box-shadow: 0px 1px 2px 1px #00000033;
+    transition: box-shadow 180ms ease-out;
+    height: 100px;
+}
+.psa_9:hover, .psa_10:hover {
+    box-shadow: 0px 10px 20px 0px #00000033; 
+    cursor: pointer;
+}
+.item_Results {
+    content: "";
+}
+@media only screen and (max-width: 600px) {
+    .psa_select {
+        flex-direction: column;
+    }
 }
