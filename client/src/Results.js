@@ -10,7 +10,7 @@ function Results({ returnResults, setReturnClicked}) {
     let noResults;
     const handleItemClick = (item) => {
         setReturnClicked([item.name, item.rarity, item.set, item.number]);
-        navigate(`/item/${item.name + item.rarity + item.set + item.number}`);
+        navigate(`/item/${item.name + "+" + item.rarity + "+" + item.set + "+" + item.number}`);
       };
 
     try {

@@ -11,7 +11,7 @@
     align-items: center;
     /*border: 2px solid green;*/
 }
-.psa_title {
+.psa_search {
     display: flex;
     height: 150px;
     margin: 0 auto;
@@ -23,6 +23,9 @@
     color: #f9f9f9;
     font-size: 50px;
     text-align: center;
+}
+.psa_title {
+    color: #313131;
 }
 .psa_select {
     display: flex;
