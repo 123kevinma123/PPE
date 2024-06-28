@@ -10,7 +10,7 @@ import Main from "./Main"
 import Search from "./Search"
 import Results from "./Results"
 
-function ItemPage({ setReturnClicked, returnClicked}) {
+function ItemPage({ setReturnClicked, returnClicked, isEntered, setIsEntered}) {
     const handleItemClick = () => {
         setReturnClicked = [];
     }
@@ -37,7 +37,6 @@ function ItemPage({ setReturnClicked, returnClicked}) {
             newReturnClicked.push(id.substring(start, id.length));
             setReturnClicked(newReturnClicked);
         }
-        console.log(returnClicked[0]);
     }
     useEffect(() => {
         ifBackButton();
@@ -48,41 +47,51 @@ function ItemPage({ setReturnClicked, returnClicked}) {
         setPSAGrade(grade)
     }
 
-    const [returnResults1, setReturnResults1] = useState([]);
-    const [returnClicked1, setReturnClicked1] = useState([]);
+    const [returnResults, setReturnResults] = useState([]);
+    const [searchPerformed, setSearchPerformed] = useState(false);
+    const handleSearch = (results) => {
+        setReturnResults(results);
+        setSearchPerformed(true);
+    }
     return (
         <div className = "itemPage_wrapper">
             <div className = "nav_bar_ItemPage">
                 <a href = "/home">
-                    <img src = {logo} alt = "logo" className = "transform scale-40"/>
+                    <img src = {logo} alt = "logo" className = "logo"/>
                 </a>
             </div>
             <div className = "psa_search">
-                <Search setReturnResults = {setReturnResults1}/>
-                {returnResults1 && returnResults1.length > 0 && (
-                    <Results returnResults1 = {returnResults1} setReturnClicked1 = {setReturnClicked1}/>
-                )}
+            <Search setReturnResults = {setReturnResults} setIsEntered = {setIsEntered} />
+            { /* <CardOfTheDay /> */}
+            { /* <CardSearch /> */}
+            {/* <Results returnResults = {returnResults} setReturnClicked = {setReturnClicked} setReturnResults/> */}
+            <Results setReturnClicked = {setReturnClicked} isEntered setIsEntered = {setIsEntered}/>
             </div>
-            <div className = "psa_title">
-                {returnClicked[0] + " " + returnClicked[1] + " " + returnClicked[2] + " #" + returnClicked[3]}
-            </div>
-            {PSAGrade === ""
-                ? <div className = "psa_select">
-                    <button className = "psa_9" onClick = {() => PSAClick("PSA9")}>
-                        PSA 9
-                    </button>
-                    <button className = "psa_10" onClick = {() => PSAClick("PSA10")}>
-                        PSA 10
-                    </button>
+            <div>
+    </div>
+            {!searchPerformed && (
+                <>
+                <div className = "psa_title">
+                    {returnClicked[0] + " " + returnClicked[1] + " " + returnClicked[2] + " #" + returnClicked[3]}
                 </div>
-                : <div>
-                    {console.log(PSAGrade)}
-                    <div className = "item_Results">
-                        Hello World
+                {PSAGrade === ""
+                    ? <div className = "psa_select">
+                        <button className = "psa_9" onClick = {() => PSAClick("PSA9")}>
+                            PSA 9
+                        </button>
+                        <button className = "psa_10" onClick = {() => PSAClick("PSA10")}>
+                            PSA 10
+                        </button>
                     </div>
-                </div>
-            }
-
+                    : <div>
+                        {console.log(PSAGrade)}
+                        <div className = "item_Results">
+                            Hello World
+                        </div>
+                    </div>
+                }
+                </>
+            )}
         </div>
     );
 }

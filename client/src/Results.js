@@ -2,17 +2,53 @@ import './Results.css';
 import CardOfTheDay from "./CardOfTheDay"
 import CardSearch from "./CardSearch"
 import sadpikachu from "C:/Users/123ke/OneDrive/Documents/Projects/react-app/client/src/sadpikachu.jpg"
-import { useNavigate } from 'react-router-dom';
-function Results({ returnResults, setReturnClicked}) {
+import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+function Results({ setReturnClicked, isEntered, setIsEntered }) {
+    console.log(useParams());
+    const [hasResults, setHasResults] = useState(false);
     const navigate = useNavigate();
     const placeholderImage = "https://fakeimg.pl/734x1024?text=No+Image";
     let content;
     let noResults;
+    const { id } = useParams();
+    const [returnResults, setReturnResults] = useState([]);
     const handleItemClick = (item) => {
         setReturnClicked([item.name, item.rarity, item.set, item.number]);
         navigate(`/item/${item.name + "+" + item.rarity + "+" + item.set + "+" + item.number}`);
+        //window.location.reload();
       };
 
+      useEffect(() => {
+        if (id == null || id === "" || id.includes('+')) {
+            console.log(returnResults.length === 0);
+            console.log("Query is null or empty, exiting useEffect");
+            return;
+        }
+
+        console.log("Query is not null, proceeding with fetch");
+        ;
+        const fetchData = async () => {
+            try {
+                console.log('Fetching data...');
+                const response = await fetch('http://localhost:1234/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({ result: id })
+                });
+                const data = await response.json();
+                setReturnResults(data);
+            } catch (error) {
+                console.error('Error fetching data from server:', error);
+            }
+        };
+
+        fetchData();
+        setIsEntered(false);
+        setHasResults(true);
+    }, [id]); 
     try {
         content = returnResults.map((item, index) => (
             <div
@@ -47,13 +83,17 @@ function Results({ returnResults, setReturnClicked}) {
     }
     return (
         <div className = "results_component">
-            <div className = "results_title">
-                Search Results
-            </div>
-            {noResults}
-            <div className = "results_content">
-                {content}
-            </div>
+            {hasResults && (
+                <>
+                    <div className = "results_title">
+                        Search Results
+                    </div>
+                    <div className = "results_content">
+                        {content}
+                    </div>
+                    {noResults}
+                </>
+            )}
         </div>
     );
 }

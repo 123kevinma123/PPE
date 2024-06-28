@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './Main.css';
 import "./Search.css"
 
-function Search({setReturnResults}) {
+function Search({setReturnResults, setIsEntered}) {
     const [searchResult, setSearchResult] = useState("");
     const navigate = useNavigate();
 
@@ -13,10 +13,12 @@ function Search({setReturnResults}) {
     };
     function handleSubmit(event) {
         if (event.key === "Enter") {
-            //navigate(`/search?query=${encodeURIComponent(searchResult)}`);
             event.preventDefault();
-            sendToBackend(searchResult);
+            //sendToBackend(searchResult);
             setSearchResult("");
+            setIsEntered(true);
+            navigate(`/search/${searchResult}`);
+            //window.location.reload();
         }
     }
     function sendToBackend(result) {
@@ -40,8 +42,9 @@ function Search({setReturnResults}) {
     return (
         <div className = "search_component">
             <div className = "search_bar">
+                
                 <input className = "search_input" type = "text" value = {searchResult} onChange = {handleInputChange}
-                onKeyDown = {handleSubmit} placeholder = "Search Pokemon"/>  
+                onKeyDown = {handleSubmit} placeholder = "Search Pokemon" />  
             </div>
         </div>
     )

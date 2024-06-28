@@ -26,7 +26,7 @@ app.post("/search", async (req, res) => {
         const parseData11 = parseData.substring(11);
         const parseData2 = parseData11.substring(0, parseData11.length - 2);
         const browser = await puppeteer.launch();
-
+        console.log(parseData)
         const page = await browser.newPage();
         await page.goto(`https://www.pokellector.com/search?criteria=${parseData2}`,{ waitUntil: 'domcontentloaded' });
 
@@ -90,6 +90,7 @@ app.post("/search", async (req, res) => {
     } catch (error) {
         console.error('Error fetching pokellector data:', error);
         res.json("No results Found!");
+        console.log("hello world!" + JSON.stringify(req.body));
     }
 });
 

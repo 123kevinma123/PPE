@@ -8,7 +8,8 @@ import Search from "./Search"
 import ItemPage from "./ItemPage"
 
 import logo from "C:/Users/123ke/OneDrive/Documents/Projects/react-app/client/src/logo.png"
-function Main({ returnResults, setReturnResults, returnClicked, setReturnClicked }) {
+function Main({ returnResults, setReturnResults, returnClicked, setReturnClicked, isEntered, setIsEntered }) {
+
     return (
         <div className = "wrapper">
             <div className = "nav_bar">
@@ -16,15 +17,15 @@ function Main({ returnResults, setReturnResults, returnClicked, setReturnClicked
                     PoKéGraDé
                 </div> */ }
                 <a href = "/home">
-                    <img src = {logo} alt = "logo" className = "transform scale-60"/>
+                    <img src = {logo} alt = "logo" className = "logo"/>
                 </a>
             </div>
-            <Search setReturnResults = {setReturnResults}/>
+            <Search setReturnResults = {setReturnResults} setIsEntered = {setIsEntered} />
             { /* <CardOfTheDay /> */}
             { /* <CardSearch /> */}
-            {returnResults && returnResults.length > 0 && (
-                <Results returnResults = {returnResults} setReturnClicked = {setReturnClicked}/>
-            )}
+            {/* <Results returnResults = {returnResults} setReturnClicked = {setReturnClicked} setReturnResults/> */}
+            <Results setReturnClicked = {setReturnClicked} isEntered setIsEntered = {setIsEntered}/>
+            
         </div>
     )
 }

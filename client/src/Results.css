@@ -10,6 +10,7 @@
     margin-bottom: 30px;
     font-size: 40px;
     color: #313131;
+    height: auto;
 }
 .results_content {
     height: fit-content;

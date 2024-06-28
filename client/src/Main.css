@@ -7,10 +7,11 @@
 .wrapper {
     background-color: #f9f9f9;
     margin: auto;
+    height: 100vh;
 }
 .nav_bar {
     display: flex;
-    height: 40vh;
+    height: 20vh;
     background-color: red;
     justify-content: center;
     align-items: center;
@@ -27,4 +28,14 @@
 
     -webkit-text-stroke: 2px #3a5fa4;*/
     -webkit-background-clip: text;
+}
+.logo {
+    height: 128px;
+    margin-inline: auto;
+    margin-block: auto;
+}
+@media only screen and (max-width: 800px) {
+    .logo {
+        height: 100px;
+    }
 }
