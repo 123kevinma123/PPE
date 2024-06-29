@@ -38,10 +38,18 @@ function Results({ setReturnClicked, isEntered, setIsEntered }) {
                     },
                     body: JSON.stringify({ result: id })
                 });
+                /*const response = await fetch('http://localhost:1234/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({ result: id })
+                });*/
                 const data = await response.json();
                 setReturnResults(data);
             } catch (error) {
-                console.error('Error fetching data from server:', error);
+                //console.error('Error fetching data from server:', error);
+                console.log("error");
             }
         };
 
