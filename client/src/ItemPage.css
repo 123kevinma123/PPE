@@ -1,19 +1,21 @@
 .itemPage_wrapper {
     background-color: #f9f9f9;
     margin: auto;
-    height: 100vh;
+    height: fit-content;
+    display:flex;
+    flex-direction: column;
 }
 .nav_bar_ItemPage {
     display: flex;
-    height: 20vh;
+    height: fit-content;
     background-color: red;
     justify-content: center;
     align-items: center;
+    padding-block: 20px;
     /*border: 2px solid green;*/
 }
 .psa_search {
     height: 150px;
-    margin: 0 auto;
     background-color: #313131;
     /*border: 2px solid red;*/
     justify-self: center;
@@ -25,6 +27,18 @@
 }
 .psa_title {
     color: #313131;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    /*border: 2px solid red;*/
+    font-size: 50px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0px 1px 2px 0px #00000033;
+    width: fit-content;
+    align-self: center;
+    padding-inline: 20px;
+    margin: 50px;
 }
 .psa_select {
     display: flex;
@@ -56,10 +70,80 @@
     cursor: pointer;
 }
 .item_Results {
-    content: "";
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 200px;
+    gap: 20px;
 }
-@media only screen and (max-width: 600px) {
-    .psa_select {
+.item_Class {
+    display: flex;
+    justify-self: center;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+.item_Image {
+    /*border: 2px solid red;*/
+    text-align: center;
+    max-height: 440px;
+    min-height: 440px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0px 1px 2px 0px #00000033;
+    padding: 20px;
+    /*margin-top: 40px;
+    margin-bottom: 100px;*/
+}
+.item_Picture {
+    height: 400px;
+}
+.item_Details {
+    /*border: 2px solid green;*/
+    width: 350px;
+    text-align: center;
+    height: 440px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0px 1px 2px 0px #00000033;
+}
+.item_Price {
+    /*border: 2px solid red;*/
+    width: 350px;
+    text-align: center;
+    height: 440px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0px 1px 2px 0px #00000033;
+    padding: 20px;
+
+}
+.item_Graphs {
+    /*need to change width so its flexible w/ whatever graph we make*/
+    width: 1060px;
+    text-align: center;
+    height: 440px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0px 1px 2px 0px #00000033;
+    padding: 20px;
+}
+.item_Historic_data {
+    /*need to change width so its flexible w/ whatever graph we make*/
+    width: 1060px;
+    text-align: center;
+    height: 440px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0px 1px 2px 0px #00000033;
+    padding: 20px;
+}
+@media only screen and (max-width: 1100px) {
+    .item_Class {
         flex-direction: column;
     }
+    
 }

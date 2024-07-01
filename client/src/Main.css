@@ -11,10 +11,11 @@
 }
 .nav_bar {
     display: flex;
-    height: 20vh;
+    height: fit-content;
     background-color: red;
     justify-content: center;
     align-items: center;
+    padding: 20px;
     /*border: 2px solid green;*/
 }
 .title {

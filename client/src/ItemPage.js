@@ -9,11 +9,13 @@ import "./Search.css"
 import Main from "./Main"
 import Search from "./Search"
 import Results from "./Results"
+import axios from 'axios';
 
 function ItemPage({ setReturnClicked, returnClicked, isEntered, setIsEntered}) {
     const handleItemClick = () => {
         setReturnClicked = [];
     }
+    const [imgUrl, setImgUrl] = useState("");
     const { id } = useParams();
     //console.log(id);
     //console.log(returnClicked[0]);
@@ -38,9 +40,6 @@ function ItemPage({ setReturnClicked, returnClicked, isEntered, setIsEntered}) {
             setReturnClicked(newReturnClicked);
         }
     }
-    useEffect(() => {
-        ifBackButton();
-    }, [returnClicked]);
 
     const [PSAGrade, setPSAGrade] = useState("");
     const PSAClick = (grade) => {
@@ -53,6 +52,26 @@ function ItemPage({ setReturnClicked, returnClicked, isEntered, setIsEntered}) {
         setReturnResults(results);
         setSearchPerformed(true);
     }
+
+    const placeholderImage = "https://fakeimg.pl/734x1024?text=No+Image";
+    const pullImage = async () => {
+        const payload = {
+            returnClicked
+        };
+        try {
+            const response = await axios.post("http://localhost:1234/api2", payload);
+            setImgUrl(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    
+    //on Page reload/load
+    useEffect(() => {
+        ifBackButton();
+        pullImage();
+    }, [returnClicked]);
+
     return (
         <div className = "itemPage_wrapper">
             <div className = "nav_bar_ItemPage">
@@ -61,14 +80,12 @@ function ItemPage({ setReturnClicked, returnClicked, isEntered, setIsEntered}) {
                 </a>
             </div>
             <div className = "psa_search">
-            <Search setReturnResults = {setReturnResults} setIsEntered = {setIsEntered} />
-            { /* <CardOfTheDay /> */}
-            { /* <CardSearch /> */}
-            {/* <Results returnResults = {returnResults} setReturnClicked = {setReturnClicked} setReturnResults/> */}
-            <Results setReturnClicked = {setReturnClicked} isEntered setIsEntered = {setIsEntered}/>
+                <Search setReturnResults = {setReturnResults} setIsEntered = {setIsEntered} />
+                { /* <CardOfTheDay /> */}
+                { /* <CardSearch /> */}
+                {/* <Results returnResults = {returnResults} setReturnClicked = {setReturnClicked} setReturnResults/> */}
+                <Results setReturnClicked = {setReturnClicked} isEntered setIsEntered = {setIsEntered}/>
             </div>
-            <div>
-    </div>
             {!searchPerformed && (
                 <>
                 <div className = "psa_title">
@@ -86,7 +103,31 @@ function ItemPage({ setReturnClicked, returnClicked, isEntered, setIsEntered}) {
                     : <div>
                         {console.log(PSAGrade)}
                         <div className = "item_Results">
-                            Hello World
+                            <div className = "item_Class">
+                                <div className = "item_Image">
+                                    <div className = "item_Picture">
+                                        <img
+                                            src = {imgUrl}
+                                            alt = "card image"
+                                            className = "results_image"
+                                            onError = {(e) => e.target.src = placeholderImage}
+                                        />
+                                    </div>
+                                </div>
+                                <div className = "item_Details">
+                                    Card Details:
+                                </div>
+                                <div className = "item_Price">
+                                    Current $$: <br></ br>
+                                    Historic $$:
+                                </div>
+                            </div>
+                            <div className = "item_Graphs">
+                                Insert Graphs Here
+                            </div>
+                            <div className = "item_Historic_data">
+                                Insert History Data Here
+                            </div>
                         </div>
                     </div>
                 }

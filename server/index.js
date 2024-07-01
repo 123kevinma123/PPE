@@ -34,7 +34,7 @@ axios.interceptors.response.use(response => {
   //console.log('Response Headers:', response.headers); // Log response headers
   return response;
 }, error => {
-  console.log('Error Response Headers:', error.response ? error.response.headers : 'No response headers'); // Log error response headers
+  //console.log('Error Response Headers:', error.response ? error.response.headers : 'No response headers'); // Log error response headers
   return Promise.reject(error);
 });
 
@@ -46,7 +46,7 @@ app.get("/", (req, res) => {
 
 app.post("/search", async (req, res) => {
   try {
-    console.log("Received /search request"); // Log when /search is called
+    //console.log("Received /search request"); // Log when /search is called
     const dataRec = JSON.stringify(req.body);
     const parseData = dataRec.replace(/ /g, "+");
     const parseData11 = parseData.substring(11);
@@ -132,6 +132,7 @@ app.get("/api", async (req, res) => {
       query += ` number:${number}`;
     }
   }
+  //console.log(query);
 
   const options = {
     headers: {
@@ -141,10 +142,10 @@ app.get("/api", async (req, res) => {
       q: query
     }
   };
-  console.log('Sending request to Pokémon TCG API with the following options:', options); // Log the request details
+  //console.log('Sending request to Pokémon TCG API with the following options:', options); // Log the request details
   try {
     const response = await axios.get('https://api.pokemontcg.io/v2/cards', options);
-    console.log('Pokémon TCG API Response Headers:', response.headers);
+    //console.log('Pokémon TCG API Response Headers:', response.headers);
 
     const result = response.data.data;
     if (result && result.length > 0) {
@@ -159,6 +160,37 @@ app.get("/api", async (req, res) => {
   }
 });
 
+app.post("/api2", async (req, res) => {
+  const { returnClicked } = req.body;
+  let name = returnClicked[0];
+  let set = returnClicked[2];
+  let number = returnClicked[3];
+  let query = `name:"${name}"` + ` set.name:"${set}"` + ` number:${number}`;
+  //console.log(query);
+
+  const options = {
+    headers: {
+      'X-Api-Key': apikey
+    },
+    params: {
+      q: query
+    }
+  };
+  //console.log('Sending request to Pokémon TCG API with the following options:', options); // Log the request details
+  try {
+    const response = await axios.get('https://api.pokemontcg.io/v2/cards', options);
+    //console.log('Pokémon TCG API Response Headers:', response.headers);
+
+    const result = response.data.data;
+    if (result && result.length > 0) {
+      res.json(result[0].images.large);
+    } else {
+      res.json("");
+    }
+  } catch (error) {
+    console.error('Error fetching Pokémon API data:', error);
+  }
+});
 app.get("/watch-count-search", async (req, res) => {
   try {
     const browser = await puppeteer.launch();
