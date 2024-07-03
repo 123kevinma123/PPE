@@ -123,10 +123,10 @@ function ItemPage({ setReturnClicked, returnClicked, isEntered, setIsEntered}) {
                                 </div>
                             </div>
                             <div className = "item_Graphs">
-                                Insert Graphs Here
+                                Insert Graphs
                             </div>
                             <div className = "item_Historic_data">
-                                Insert History Data Here
+                                History Data
                             </div>
                         </div>
                     </div>
