@@ -16,12 +16,12 @@ function ItemPage({ setReturnClicked, returnClicked, isEntered, setIsEntered}) {
         setReturnClicked = [];
     }
     const [imgUrl, setImgUrl] = useState("");
+    const [cardListings, setCardListings] = useState({});
     const { id } = useParams();
-    //console.log(id);
-    //console.log(returnClicked[0]);
-    //console.log(returnClicked[1]);
-    //console.log(returnClicked[2]);
-    //console.log(returnClicked[3]);
+    const [searchResultsEbay, setSearchResultsEbay] = useState([]);
+    const [searchResultsWatchCount, setSearchResultsWatchCount] = useState([]);
+    const placeholderImage = "https://fakeimg.pl/734x1024?text=No+Image";
+
     //if returnClicked == undefined --> repopulate w/ id lol
     const ifBackButton = () => {
         if (!returnClicked || returnClicked.length === 0) {
@@ -42,7 +42,7 @@ function ItemPage({ setReturnClicked, returnClicked, isEntered, setIsEntered}) {
     }
 
     const [PSAGrade, setPSAGrade] = useState("");
-    const PSAClick = (grade) => {
+    const PSAClick = async (grade) => {
         setPSAGrade(grade)
     }
 
@@ -53,24 +53,50 @@ function ItemPage({ setReturnClicked, returnClicked, isEntered, setIsEntered}) {
         setSearchPerformed(true);
     }
 
-    const placeholderImage = "https://fakeimg.pl/734x1024?text=No+Image";
     const pullImage = async () => {
         const payload = {
             returnClicked
         };
         try {
             const response = await axios.post("http://localhost:1234/api2", payload);
-            setImgUrl(response.data);
+            setImgUrl(response.data.images.large);
+            //setCardEffect(response.data[1]);
+            //console.log(cardEffect.abilities);
         } catch (error) {
             console.error(error);
+        }
+    };
+
+    //send to search on ebay
+    const fetchEbaySearchResults = async () => {
+        try {
+            returnClicked[4] = PSAGrade;
+            const payload = {
+                returnClicked
+            };
+            // Fetch eBay search results from server
+            const response = await axios.post('http://localhost:1234/ebay-search', payload);
+
+            // Set the fetched data as the search results state
+            setSearchResultsEbay(response.data.results);
+            setCardListings(response.data.statistics);
+        } catch (error) {
+            console.error('Error fetching eBay data:', error);
         }
     };
     
     //on Page reload/load
     useEffect(() => {
-        ifBackButton();
-        pullImage();
+        if (returnClicked || returnClicked.length != 0) {
+            ifBackButton();
+            pullImage();
+        }
     }, [returnClicked]);
+
+    //on clicking PSAGrade
+    useEffect(() => {
+        fetchEbaySearchResults();
+    }, [PSAGrade]);
 
     return (
         <div className = "itemPage_wrapper">
@@ -89,15 +115,15 @@ function ItemPage({ setReturnClicked, returnClicked, isEntered, setIsEntered}) {
             {!searchPerformed && (
                 <>
                 <div className = "psa_title">
-                    {returnClicked[0] + " " + returnClicked[1] + " " + returnClicked[2] + " #" + returnClicked[3]}
+                    {returnClicked[0] + " #" + returnClicked[3] + " " + PSAGrade}
                 </div>
                 {PSAGrade === ""
                     ? <div className = "psa_select">
-                        <button className = "psa_9" onClick = {() => PSAClick("PSA9")}>
-                            PSA 9
+                        <button className = "psa_9" onClick = {() => PSAClick("Psa 9")}>
+                            Psa 9
                         </button>
-                        <button className = "psa_10" onClick = {() => PSAClick("PSA10")}>
-                            PSA 10
+                        <button className = "psa_10" onClick = {() => PSAClick("Psa 10")}>
+                            Psa 10
                         </button>
                     </div>
                     : <div>
@@ -114,11 +140,18 @@ function ItemPage({ setReturnClicked, returnClicked, isEntered, setIsEntered}) {
                                         />
                                     </div>
                                 </div>
-                                <div className = "item_Details">
-                                    Card Details:
+                                <div className = "item_Price">
+                                    Current Trends
+                                    <br />
+                                    Min Price: ${cardListings && cardListings.low ? cardListings.low.toFixed(2) : '0.00'}
+                                    <br />
+                                    Max Price: ${cardListings && cardListings.high ? cardListings.high.toFixed(2) : '0.00'}
+                                    <br />
+                                    Median Price: ${cardListings && cardListings.median ? cardListings.median.toFixed(2) : '0.00'}
+                                    <br />
+                                    Average Price: ${cardListings && cardListings.avg ? cardListings.avg.toFixed(2) : '0.00'}
                                 </div>
                                 <div className = "item_Price">
-                                    Current $$: <br></ br>
                                     Historic $$:
                                 </div>
                             </div>

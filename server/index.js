@@ -183,9 +183,10 @@ app.post("/api2", async (req, res) => {
 
     const result = response.data.data;
     if (result && result.length > 0) {
-      res.json(result[0].images.large);
+      res.json(result[0]);
+      //console.log(result[0]);
     } else {
-      res.json("");
+      res.json([]);
     }
   } catch (error) {
     console.error('Error fetching Pokémon API data:', error);
@@ -229,13 +230,41 @@ app.get("/watch-count-search", async (req, res) => {
   }
 });
 
-app.get('/ebay-search', async (req, res) => {
+app.post('/ebay-search', async (req, res) => {
   try {
+        //defining variables
+        let half = 0;
+        let median = 0;
+        let low = 0;
+        let high = 0;
+        let avg = 0;
+        let sum = 0;
+        let statistics = {
+          low,
+          high,
+          median,
+          avg,
+        };
     const browser = await puppeteer.launch();
 
     const page = await browser.newPage();
 
-    await page.goto('https://www.ebay.com/sch/i.html?_from=R40&_nkw=%22cynthia%22+%22sv82%22+&_sacat=0&_ipg=240');
+    const { returnClicked } = req.body;
+
+    const name = returnClicked[0];
+    const rarity = returnClicked[1];
+    const set = returnClicked[2];
+    const number = returnClicked[3];
+    const PSAGrade = returnClicked[4];
+      if (PSAGrade == null) {
+        res.json({results: [], statistics });
+        return;
+      }
+    let tempURL = `https://www.ebay.com/sch/i.html?_from=R40&_nkw=%22${returnClicked[0]}%22+%22${returnClicked[1]}%22+%22${returnClicked[3]}%22&_ipg=240`;
+    await page.goto(tempURL);
+    //console.log(name + rarity + set + number + PSAGrade + "hello world");
+    console.log(tempURL);
+
 
     await page.waitForSelector('.s-item');
 
@@ -251,19 +280,52 @@ app.get('/ebay-search', async (req, res) => {
       return data;
     });
     await browser.close();
-    console.log(results.length);
+    //console.log(results.length);
     const processed_data = [];
-    //filter results here 
-    for (let i = 1; i < results.length; i++) {
+    const onlyPrices = [];
+
+    //filter results here
+    if (name != null) {
+
+    for (let i = 2; i < results.length; i++) {
       const resultStr = results[i].title.toString();
-      if (resultStr.toLowerCase().includes("psa 10") &&
+      //console.log(resultStr);
+      if (resultStr.toLowerCase().includes(returnClicked[4].toLowerCase()) &&
         !resultStr.toLowerCase().includes("japanese")
       ) {
         processed_data.push(results[i]);
+        const cleanedPriceString = results[i].price.replace(/[$,]/g, ''); // Remove both $ and ,
+        const priceNumber = Number(cleanedPriceString);
+        onlyPrices.push(priceNumber);
+        //console.log(results[i]);
       }
     }
-    console.log(processed_data.length);
-    res.json(processed_data);
+    //console.log(processed_data);
+    
+    onlyPrices.sort((a, b) => a - b);
+    console.log(onlyPrices);
+    half = Math.floor(onlyPrices.length / 2);
+    median = onlyPrices[half];
+    low = onlyPrices[0];
+    high = onlyPrices[onlyPrices.length - 1];
+    sum = 0;
+    for (let i = 0; i < onlyPrices.length; i++) {
+      sum += onlyPrices[i];
+    }
+    avg = sum / onlyPrices.length;
+    /*console.log(median);
+    console.log(high);
+    console.log(low);
+    console.log(avg);*/
+    statistics = {
+      low,
+      high,
+      median,
+      avg,
+    };
+  }
+    res.json( {results: processed_data, statistics });
+
   } catch (error) {
     console.error('Error fetching eBay data:', error);
     res.status(500).json({ error: 'Internal Server Error' });
