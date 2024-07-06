@@ -95,7 +95,9 @@ function ItemPage({ setReturnClicked, returnClicked, isEntered, setIsEntered}) {
 
     //on clicking PSAGrade
     useEffect(() => {
-        fetchEbaySearchResults();
+        if (returnClicked[0] != null) {
+            fetchEbaySearchResults();
+        }
     }, [PSAGrade]);
 
     return (
@@ -115,14 +117,14 @@ function ItemPage({ setReturnClicked, returnClicked, isEntered, setIsEntered}) {
             {!searchPerformed && (
                 <>
                 <div className = "psa_title">
-                    {returnClicked[0] + " #" + returnClicked[3] + " " + PSAGrade}
+                    {returnClicked[0] + " #" + returnClicked[3] + " - " + PSAGrade}
                 </div>
                 {PSAGrade === ""
                     ? <div className = "psa_select">
-                        <button className = "psa_9" onClick = {() => PSAClick("Psa 9")}>
+                        <button className = "psa_9" onClick = {() => PSAClick("PSA 9")}>
                             Psa 9
                         </button>
-                        <button className = "psa_10" onClick = {() => PSAClick("Psa 10")}>
+                        <button className = "psa_10" onClick = {() => PSAClick("PSA 10")}>
                             Psa 10
                         </button>
                     </div>
