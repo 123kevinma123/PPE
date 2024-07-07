@@ -192,12 +192,40 @@ app.post("/api2", async (req, res) => {
     console.error('Error fetching Pokémon API data:', error);
   }
 });
-app.get("/watch-count-search", async (req, res) => {
+app.post("/watch-count-search", async (req, res) => {
   try {
+    //defining variables
+    let half = 0;
+    let median = 0;
+    let low = 0;
+    let high = 0;
+    let avg = 0;
+    let sum = 0;
+    let tempURL = "";
+    let statistics = {
+      low,
+      high,
+      median,
+      avg,
+      tempURL,
+    };
+    const { returnClicked } = req.body;
+    const name = returnClicked[0];
+    const rarity = returnClicked[1];
+    const set = returnClicked[2];
+    const number = returnClicked[3];
+    const PSAGrade = returnClicked[4];
+    if (PSAGrade == null) {
+      res.json({results: [], statistics });
+      return;
+    }
     const browser = await puppeteer.launch();
 
     const page = await browser.newPage();
-    await page.goto('http://www.watchcount.com/completed.php?bkw=%22cynthia%22+%22sv82%22+%22psa10%22&bcat=0&bcts=&sfsb=Show+Me%21&csbin=all&cssrt=ts&bfw=1&bslr=&bnp=&bxp=#serp');
+    tempURL = `http://www.watchcount.com/completed.php?bkw=%22${name}%22+%22${number}%22+%22${PSAGrade}%22&bcat=0&bcts=&sfsb=Show+Me%21&csbin=all&cssrt=ts&bfw=1&bslr=&bnp=&bxp=#serp`
+    tempURL = tempURL.replace(" ", '');
+    await page.goto(tempURL);
+    console.log(tempURL);
 
     await page.waitForSelector(".serptablecell2-adv");
 
@@ -213,17 +241,44 @@ app.get("/watch-count-search", async (req, res) => {
       });
       return data;
     });
+    //console.log(results);
     await browser.close();
+
     const processed_data = [];
+    const onlyPrices = [];
+
     for (let i = 0; i < results.length; i++) {
       const resultStr = results[i].title.toString();
-      if (resultStr.toLowerCase().includes("psa 10") &&
+      if (resultStr.toLowerCase().includes(returnClicked[4].toLowerCase()) &&
         !resultStr.toLowerCase().includes("japanese")
       ) {
         processed_data.push(results[i]);
+        const cleanedPriceString = results[i].price.replace(/[$,()USD]/g, ''); // Remove both $ and ,
+        const priceNumber = Number(cleanedPriceString);
+        onlyPrices.push(priceNumber);
       }
     }
-    res.json(processed_data);
+    onlyPrices.sort((a, b) => a - b);
+    //console.log(onlyPrices);
+    //console.log(processed_data);
+    half = Math.floor(onlyPrices.length / 2);
+    median = onlyPrices[half];
+    low = onlyPrices[0];
+    high = onlyPrices[onlyPrices.length - 1];
+    sum = 0;
+    for (let i = 0; i < onlyPrices.length; i++) {
+      sum += onlyPrices[i];
+    }
+    avg = sum / onlyPrices.length;
+    statistics = {
+      low,
+      high,
+      median,
+      avg,
+      tempURL,
+    };
+
+    res.json( {results: processed_data, statistics });
   } catch (error) {
     console.error('Error fetching watch count data:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -239,11 +294,13 @@ app.post('/ebay-search', async (req, res) => {
         let high = 0;
         let avg = 0;
         let sum = 0;
+        let tempURL = "";
         let statistics = {
           low,
           high,
           median,
           avg,
+          tempURL,
         };
     const browser = await puppeteer.launch();
 
@@ -260,7 +317,7 @@ app.post('/ebay-search', async (req, res) => {
         res.json({results: [], statistics });
         return;
       }
-    let tempURL = `https://www.ebay.com/sch/i.html?_from=R40&_nkw=%22${returnClicked[0]}%22+%22${returnClicked[1]}%22+%22${returnClicked[3]}%22&_ipg=240`;
+    tempURL = `https://www.ebay.com/sch/i.html?_from=R40&_nkw=%22${returnClicked[0]}%22+%22${returnClicked[1]}%22+%22${returnClicked[3]}%22&_ipg=240`;
     await page.goto(tempURL);
     //console.log(name + rarity + set + number + PSAGrade + "hello world");
     console.log(tempURL);
@@ -303,7 +360,7 @@ app.post('/ebay-search', async (req, res) => {
     //console.log(processed_data);
     
     onlyPrices.sort((a, b) => a - b);
-    console.log(onlyPrices);
+    //console.log(onlyPrices);
     half = Math.floor(onlyPrices.length / 2);
     median = onlyPrices[half];
     low = onlyPrices[0];
@@ -317,13 +374,15 @@ app.post('/ebay-search', async (req, res) => {
     console.log(high);
     console.log(low);
     console.log(avg);*/
-    statistics = {
-      low,
-      high,
-      median,
-      avg,
-    };
   }
+  statistics = {
+    low,
+    high,
+    median,
+    avg,
+    tempURL,
+  };
+    console.log(tempURL);
     res.json( {results: processed_data, statistics });
 
   } catch (error) {

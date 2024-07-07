@@ -16,7 +16,8 @@ function ItemPage({ setReturnClicked, returnClicked, isEntered, setIsEntered}) {
         setReturnClicked = [];
     }
     const [imgUrl, setImgUrl] = useState("");
-    const [cardListings, setCardListings] = useState({});
+    const [cardListingCurrent, setCardListingCurrent] = useState({});
+    const [cardListingHistoric, setCardListingHistoric] = useState({});
     const { id } = useParams();
     const [searchResultsEbay, setSearchResultsEbay] = useState([]);
     const [searchResultsWatchCount, setSearchResultsWatchCount] = useState([]);
@@ -79,11 +80,35 @@ function ItemPage({ setReturnClicked, returnClicked, isEntered, setIsEntered}) {
 
             // Set the fetched data as the search results state
             setSearchResultsEbay(response.data.results);
-            setCardListings(response.data.statistics);
+            setCardListingCurrent(response.data.statistics);
+
+            //console.log('eBay Search Results:', response.data.results);
+            //console.log('eBay Search Statistics:', response.data.statistics);
+
         } catch (error) {
             console.error('Error fetching eBay data:', error);
         }
     };
+
+    const fetchWatchCountResults = async () => {
+        try {
+            returnClicked[4] = PSAGrade;
+            const payload = {
+                returnClicked
+            };
+
+            const response = await axios.post('http://localhost:1234/watch-count-search', payload);
+
+            setSearchResultsWatchCount(response.data.results);
+            setCardListingHistoric(response.data.statistics);
+
+            //console.log('watchCount Search Results:', response.data.results);
+            //console.log('watchCount Search Statistics:', response.data.statistics);
+
+        } catch (error) {
+            console.error("Error fetching Watch Count data:", error);
+        }
+    }
     
     //on Page reload/load
     useEffect(() => {
@@ -96,6 +121,7 @@ function ItemPage({ setReturnClicked, returnClicked, isEntered, setIsEntered}) {
     //on clicking PSAGrade
     useEffect(() => {
         if (returnClicked[0] != null) {
+            fetchWatchCountResults();
             fetchEbaySearchResults();
         }
     }, [PSAGrade]);
@@ -117,7 +143,7 @@ function ItemPage({ setReturnClicked, returnClicked, isEntered, setIsEntered}) {
             {!searchPerformed && (
                 <>
                 <div className = "psa_title">
-                    {returnClicked[0] + " #" + returnClicked[3] + " - " + PSAGrade}
+                    {returnClicked[0] + " #" + returnClicked[3] + " " + PSAGrade}
                 </div>
                 {PSAGrade === ""
                     ? <div className = "psa_select">
@@ -142,19 +168,116 @@ function ItemPage({ setReturnClicked, returnClicked, isEntered, setIsEntered}) {
                                         />
                                     </div>
                                 </div>
-                                <div className = "item_Price">
-                                    Current Trends
-                                    <br />
-                                    Min Price: ${cardListings && cardListings.low ? cardListings.low.toFixed(2) : '0.00'}
-                                    <br />
-                                    Max Price: ${cardListings && cardListings.high ? cardListings.high.toFixed(2) : '0.00'}
-                                    <br />
-                                    Median Price: ${cardListings && cardListings.median ? cardListings.median.toFixed(2) : '0.00'}
-                                    <br />
-                                    Average Price: ${cardListings && cardListings.avg ? cardListings.avg.toFixed(2) : '0.00'}
+                                <div>
+                                    <div className = "item_Price">
+                                        <div className = "text-black text-2xl mt-2 mb-4 tracking-wider text-center font-bold">Current Trends</div>
+
+                                        <div className = "text-black text-base tracking-wider mb-4 flex">
+                                            <div className = "font-bold mx-3">
+                                                Min Price: 
+                                            </div>
+                                            <div className = "">
+                                                ${cardListingCurrent && cardListingCurrent.low ? cardListingCurrent.low.toFixed(2) : '0.00'}
+                                            </div>
+                                        </div>
+
+                                        <div className = "text-black text-base tracking-wider mb-4 flex">
+                                            <div className = "font-bold mx-3">
+                                                Max Price: 
+                                            </div>
+                                            <div className = "">
+                                                ${cardListingCurrent && cardListingCurrent.high ? cardListingCurrent.high.toFixed(2) : '0.00'}
+                                            </div>
+                                        </div>
+
+                                        <div className = "text-black text-base tracking-wider mb-4 flex">
+                                            <div className = "font-bold mx-3">
+                                                Median Price: 
+                                            </div>
+                                            <div className = "">
+                                                ${cardListingCurrent && cardListingCurrent.median ? cardListingCurrent.median.toFixed(2) : '0.00'}
+                                            </div>
+                                        </div>
+
+                                        <div className = "text-black text-base tracking-wider mb-4 flex">
+                                            <div className = "font-bold mx-3">
+                                                Average Price: 
+                                            </div>
+                                            <div className = "">
+                                                ${cardListingCurrent && cardListingCurrent.avg ? cardListingCurrent.avg.toFixed(2) : '0.00'}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className = "item_Url">
+                                        <div className = "text-black text-base tracking-wider items-center">
+                                            <a
+                                            href = {cardListingCurrent && cardListingCurrent.tempURL ? cardListingCurrent.tempURL : 'https://www.google.com'}
+                                            className = "mx-3 block text-center underline"
+                                            target = "_blank"
+                                            rel = "noopener noreferrer"
+                                            >
+                                                View Listings
+                                            </a>
+                                            <div className = "">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className = "item_Price">
-                                    Historic $$:
+                                <div>
+                                    <div className = "item_Price">
+                                        <div className = "text-black text-2xl mt-2 mb-4 tracking-wider text-center font-bold">Historic Trends</div>
+
+                                        <div className = "text-black text-base tracking-wider mb-4 flex">
+                                            <div className = "font-bold mx-3">
+                                                Min Price: 
+                                            </div>
+                                            <div className = "">
+                                                ${cardListingHistoric && cardListingHistoric.low ? cardListingHistoric.low.toFixed(2) : '0.00'}
+                                            </div>
+                                        </div>
+
+                                        <div className = "text-black text-base tracking-wider mb-4 flex">
+                                            <div className = "font-bold mx-3">
+                                                Max Price: 
+                                            </div>
+                                            <div className = "">
+                                                ${cardListingHistoric && cardListingHistoric.high ? cardListingHistoric.high.toFixed(2) : '0.00'}
+                                            </div>
+                                        </div>
+
+                                        <div className = "text-black text-base tracking-wider mb-4 flex">
+                                            <div className = "font-bold mx-3">
+                                                Median Price: 
+                                            </div>
+                                            <div className = "">
+                                                ${cardListingHistoric && cardListingHistoric.median ? cardListingHistoric.median.toFixed(2) : '0.00'}
+                                            </div>
+                                        </div>
+
+                                        <div className = "text-black text-base tracking-wider mb-4 flex">
+                                            <div className = "font-bold mx-3">
+                                                Average Price: 
+                                            </div>
+                                            <div className = "">
+                                                ${cardListingHistoric && cardListingHistoric.avg ? cardListingHistoric.avg.toFixed(2) : '0.00'}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className = "item_Url">
+                                        <div className = "text-black text-base tracking-wider">
+                                            <a
+                                            href = {cardListingHistoric && cardListingHistoric.tempURL ? cardListingHistoric.tempURL : 'https://www.google.com'}
+                                            className = "mx-3 block text-center underline"
+                                            target = "_blank"
+                                            rel = "noopener noreferrer"
+                                            >
+                                                View Listings
+                                            </a>
+                                            <div className = "">
+
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div className = "item_Graphs">
