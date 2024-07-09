@@ -130,9 +130,9 @@
 }
 .item_Graphs {
     /*need to change width so its flexible w/ whatever graph we make*/
-    width: 1060px;
     text-align: center;
     height: fit-content;
+    width: fit-content;
     background-color: white;
     border-radius: 20px;
     box-shadow: 0px 1px 2px 0px #00000033;
@@ -149,13 +149,23 @@
     padding: 20px;
     display: flex;
 }
+.scrollContainer {
+    overflow: auto;
+}
 .historic_Graph {
-    flex: 1;
-    height:fit-content;
+    width: 1060px; /* Set a larger width for the chart */
+    height: fit-content;
 }
 @media only screen and (max-width: 1100px) {
     .item_Class {
         flex-direction: column;
+    }
+    .scrollContainer {
+        max-width: 350px;
+    }
+    .historic_Graph {
+        width: 1060px;
+        overflow: auto;
     }
     
 }

@@ -223,7 +223,6 @@ app.post("/watch-count-search", async (req, res) => {
 
     const page = await browser.newPage();
     tempURL = `http://www.watchcount.com/completed.php?bkw=%22${name}%22+%22${number}%22+%22${PSAGrade}%22&bcat=0&bcts=&sfsb=Show+Me%21&csbin=all&cssrt=ts&bfw=1&bslr=&bnp=&bxp=#serp`
-    tempURL = tempURL.replace(" ", '');
     await page.goto(tempURL);
     console.log(tempURL);
 

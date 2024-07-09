@@ -281,12 +281,12 @@ function ItemPage({ setReturnClicked, returnClicked, isEntered, setIsEntered}) {
                                     </div>
                                 </div>
                             </div>
-                            <div className = "item_Graphs">
-                                <HistoricGraph searchResultsWatchCount = {searchResultsWatchCount}/>
+                            <div className = "scrollContainer">
+                                <div className = "item_Graphs">
+                                    <HistoricGraph searchResultsWatchCount = {searchResultsWatchCount}/>
+                                </div>
                             </div>
-                            <div className = "item_Historic_data">
-                                History Data
-                            </div>
+                            
                         </div>
                     </div>
                 }
