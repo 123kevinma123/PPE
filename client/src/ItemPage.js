@@ -10,6 +10,7 @@ import Main from "./Main"
 import Search from "./Search"
 import Results from "./Results"
 import axios from 'axios';
+import HistoricGraph from"./HistoricGraph";
 
 function ItemPage({ setReturnClicked, returnClicked, isEntered, setIsEntered}) {
     const handleItemClick = () => {
@@ -281,7 +282,7 @@ function ItemPage({ setReturnClicked, returnClicked, isEntered, setIsEntered}) {
                                 </div>
                             </div>
                             <div className = "item_Graphs">
-                                Insert Graphs
+                                <HistoricGraph searchResultsWatchCount = {searchResultsWatchCount}/>
                             </div>
                             <div className = "item_Historic_data">
                                 History Data
